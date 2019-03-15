@@ -1,5 +1,5 @@
 import React from 'react';
-import { Actions, Button, Tab } from '@twilio/flex-ui';
+import { Actions, Tab } from '@twilio/flex-ui';
 
 import styled from 'react-emotion';
 
@@ -29,7 +29,7 @@ export class LookupTab extends React.Component {
   };
 
   resetState() {
-  	this.state = {
+  	this.setState({
 			hasLookup: false,
 			name: "",
 			gender: "",
@@ -47,13 +47,13 @@ export class LookupTab extends React.Component {
 			lineType: "",
 			phoneStartDate: "",
 			error: null
-		}
+		});
   }
 
   initLookup() {
-  	console.log(`Fetching Lookup for ${fromNumber}...`);
-
   	const fromNumber = this.props.task.source.attributes.name;
+  	console.log(`Fetching Lookup for ${fromNumber}...`);
+  	
   	fetch(
         this.LOOKUP_DATA_FUNCTION +
           "?FromNumber=" +
