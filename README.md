@@ -9,7 +9,7 @@ Make sure you have [Node.js](https://nodejs.org) as well as [`npm`](https://npmj
 Afterwards install the dependencies by running `npm install`:
 
 ```bash
-cd plugin-lookup-info
+cd plugin-twilio-lookup
 
 # If you use npm
 npm install
