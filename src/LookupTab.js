@@ -4,13 +4,31 @@ import { Actions, Tab } from '@twilio/flex-ui';
 import styled from 'react-emotion';
 
 export class LookupTab extends React.Component {
-	LOOKUP_DATA_FUNCTION = "";
+	LOOKUP_NUMBER_FUNCTION = "";
 
 	constructor(props) {
 		super(props);
-		this.resetState();
+		this.state = {
+			hasLookup: false,
+			name: "",
+			gender: "",
+			ageRange: "",
+			address1: "",
+			address2: "",
+			city: "",
+			state: "",
+			postalCode: "",
+			country: "",
+			addressType: "",
+			addressStartDate: "",
+			phoneNumber: "",
+			carrierName: "",
+			lineType: "",
+			phoneStartDate: "",
+			error: null
+		}
 
-		this.LOOKUP_DATA_FUNCTION = this.getRuntimeDomain() + "/LookupData";
+		this.LOOKUP_NUMBER_FUNCTION = this.getRuntimeDomain() + "/LookupNumber";
 		
 		Actions.addListener("beforeSelectTask", () => {
 			this.resetState();
@@ -53,9 +71,9 @@ export class LookupTab extends React.Component {
   initLookup() {
   	const fromNumber = this.props.task.source.attributes.name;
   	console.log(`Fetching Lookup for ${fromNumber}...`);
-  	
+
   	fetch(
-        this.LOOKUP_DATA_FUNCTION +
+        this.LOOKUP_NUMBER_FUNCTION +
           "?FromNumber=" +
           encodeURIComponent(fromNumber),
         {
@@ -77,8 +95,8 @@ export class LookupTab extends React.Component {
 	          	});
 						} else {
 							this.setState({
-		        		hasLookup: false
-		        	});
+								hasLookup: false
+							});
 		        	return;
 						}
       			
@@ -107,7 +125,10 @@ export class LookupTab extends React.Component {
       			}
         	});
         } else {
-        	this.resetState();
+        	this.setState({
+						hasLookup: false,
+						error: `${resp.status} (${resp.statusText})`
+					});
         }
       });
   }
@@ -126,54 +147,64 @@ export class LookupTab extends React.Component {
       }
     `;
 
+    if (!this.state.hasLookup) {
+    	if (this.state.error == null) {
+    		return null;
+    	}
+
+  		return (
+				<div style={{ margin: "1em" }}>
+    			<h1>No Lookup information found.</h1>
+    		</div>
+    	)
+    }
+
     return (
     	<Tab>
     	<Container>
-    		{this.state.hasLookup &&
-	    		<div style={{ margin: "1em" }}>
-		    		<div>
-		    			<h1>Caller Info</h1>
-				  		<h2>Name</h2>
-				  		<p>{this.state.name}</p>
-				  		<h2>Gender</h2>
-				  		<p>{this.state.gender}</p>
-				  		<h2>Age Range</h2>
-				  		<p>{this.state.ageRange}</p>
-				  	</div>
-				  	<div>
-				  		<hr style={{ marginBottom: "1em" }} />
-				  		<h1>Location Info</h1>
-				  		<h2>Address</h2>
-				  		<p>
-				  			{this.state.address1}
-				  			{this.state.address1 &&
-				  				<br />
-				  			}
-				  			{this.state.address2}
-				  			{this.state.address2 &&
-				  				<br />
-				  			}
-				  			{this.state.city}, {this.state.state} {this.state.postalCode}
-				  		</p>
-				  		<h2>Type</h2>
-				  		<p>{this.state.addressType}</p>
-				  		<h2>Start Date</h2>
-				  		<p>{this.state.addressStartDate}</p>
-				  	</div>
-				  	<div>
-				  		<hr style={{ marginBottom: "1em" }} />
-				  		<h1>Phone Info</h1>
-				  		<h2>Number</h2>
-				  		<p>{this.state.phoneNumber}</p>
-				  		<h2>Carrier Name</h2>
-				  		<p>{this.state.carrierName}</p>
-				  		<h2>Line Type</h2>
-				  		<p>{this.state.lineType}</p>
-				  		<h2>Start Date</h2>
-				  		<p>{this.state.phoneStartDate}</p>
-		    		</div>
+    		<div style={{ margin: "1em" }}>
+	    		<div>
+	    			<h1>Caller Info</h1>
+			  		<h2>Name</h2>
+			  		<p>{this.state.name}</p>
+			  		<h2>Gender</h2>
+			  		<p>{this.state.gender}</p>
+			  		<h2>Age Range</h2>
+			  		<p>{this.state.ageRange}</p>
+			  	</div>
+			  	<div>
+			  		<hr style={{ marginBottom: "1em" }} />
+			  		<h1>Location Info</h1>
+			  		<h2>Address</h2>
+			  		<p>
+			  			{this.state.address1}
+			  			{this.state.address1 &&
+			  				<br />
+			  			}
+			  			{this.state.address2}
+			  			{this.state.address2 &&
+			  				<br />
+			  			}
+			  			{this.state.city}, {this.state.state} {this.state.postalCode}
+			  		</p>
+			  		<h2>Type</h2>
+			  		<p>{this.state.addressType}</p>
+			  		<h2>Start Date</h2>
+			  		<p>{this.state.addressStartDate}</p>
+			  	</div>
+			  	<div>
+			  		<hr style={{ marginBottom: "1em" }} />
+			  		<h1>Phone Info</h1>
+			  		<h2>Number</h2>
+			  		<p>{this.state.phoneNumber}</p>
+			  		<h2>Carrier Name</h2>
+			  		<p>{this.state.carrierName}</p>
+			  		<h2>Line Type</h2>
+			  		<p>{this.state.lineType}</p>
+			  		<h2>Start Date</h2>
+			  		<p>{this.state.phoneStartDate}</p>
 	    		</div>
-	    	}
+    		</div>
     	</Container>
     	</Tab>
     );

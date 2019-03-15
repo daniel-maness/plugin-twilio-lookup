@@ -13,7 +13,6 @@ exports.handler = async function(context, event, callback) {
 		if (result.addOns.status === 'successful') {
 			response.setStatusCode(201);
 			response.setBody(result.addOns.results[addOnName]);
-			console.log(response.body);
 		} else {
 			response.setStatusCode(400);
 		}
